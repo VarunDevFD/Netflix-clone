@@ -66,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     Future.delayed(const Duration(milliseconds: 4000), () {
-      Navigator.pushReplacementNamed(context, AppRoutes.onBoardingScreen);
+      Navigator.pushReplacementNamed(context, AppRoutes.onBoardingSn);
     });
   }
 

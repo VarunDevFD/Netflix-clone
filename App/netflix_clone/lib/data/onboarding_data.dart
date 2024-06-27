@@ -7,7 +7,7 @@ final List<OnBoardingModel> onboardingData = [
     description: "All of Netflix, starting at just ₹149.",
   ),
   OnBoardingModel(
-    imagePath: 'assets/images/onboarding_screen2.png',
+    imagePath: 'assets/images/onboarding_screen4.png',
     title: "Downlaod and watch \n offline",
     description: "Always have something to watch",
   ),

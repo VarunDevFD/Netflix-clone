@@ -17,7 +17,7 @@ class OnboardingScreen extends StatelessWidget {
       ),
       child: Stack(
         children: [
-         Positioned(
+          Positioned(
             bottom: 180,
             left: 20,
             right: 20,
@@ -26,11 +26,12 @@ class OnboardingScreen extends StatelessWidget {
               children: [
                 Text(
                   onboardingModel.title,
-                  style:const TextStyle(
-                      color: Colors.white,
-                      fontSize: 48,
-                      height: 1.1,
-                      fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 48,
+                    height: 1.1,
+                    fontWeight: FontWeight.w900,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),

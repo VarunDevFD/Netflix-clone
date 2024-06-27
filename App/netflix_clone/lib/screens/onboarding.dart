@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/data/onboarding_data.dart';
 import 'package:netflix_clone/screens/onboarding_screen.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/untils/app_routes.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({Key? key}) : super(key: key);
@@ -61,7 +62,9 @@ class _OnboardingState extends State<Onboarding> {
                         style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.loginSn);
+                    },
                     child: const Text('LOG IN',
                         style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
@@ -97,7 +100,7 @@ class _OnboardingState extends State<Onboarding> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // Handle button press
+                      Navigator.pushNamed(context, AppRoutes.loginSn);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.loadingIndicator,
