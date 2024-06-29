@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/screens/downloads_page.dart';
+import 'package:netflix_clone/screens/games_page.dart';
+import 'package:netflix_clone/screens/new_and_hot_page.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/widgets/custom_app_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final String selectedImage;
   final String userName;
 
@@ -12,185 +16,118 @@ class HomeScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  ScrollController? _scrollController;
+  double _scrollOffset = 0.0;
+  int _currentIndex = 0;
+
+  final PageController _pageController = PageController();
+
+  final List<Widget> _pages = [
+    HomePage(),
+    GamesPage(),
+    NewAndHotPage(),
+    DownloadsPage(),
+  ];
+
+  final List<String> _appBarTitles = [
+    '',
+    'Games',
+    'New & Hot',
+    'Downloads',
+  ];
+
+  @override
+  void initState() {
+    _scrollController = ScrollController()
+      ..addListener(() {
+        setState(() {
+          _scrollOffset = _scrollController!.offset;
+        });
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController?.dispose();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void onPageChanged(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 123, 15, 7),
-      appBar: AppBar(
-        backgroundColor: AppColors.blackOpc,
-        title: Image.asset(
-          'assets/logo/logo.png',
-          height: 80,
-          width: 70,
+      appBar: PreferredSize(
+        preferredSize: Size(screenSize.width, 50.0),
+        child: CustomAppBar(
+          selectedImage: widget.selectedImage,
+          scrollOffset: _scrollOffset,
+          logoPath: _currentIndex == 0 ? 'assets/logo/logo.png' : null,
+          title: _currentIndex == 0 ? null : _appBarTitles[_currentIndex],
         ),
-        automaticallyImplyLeading: false, // Disable default back arrow
-        titleSpacing: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search_rounded,
-              size: 40,
-            ),
-            onPressed: () {
-              // Handle search button press
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            width: 35,
-            height: 35,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(
-                image: AssetImage(selectedImage),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          
-        ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle TV Shows button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors
-                        .primary, // Example primary color, adjust as needed
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('TV Shows'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Handle Movies button press
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors
-                        .primary, // Example primary color, adjust as needed
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Movies'),
-                ),
-                DropdownButton<String>(
-                  onChanged: (String? value) {
-                    // Handle dropdown item selection
-                    switch (value) {
-                      case 'Categories':
-                        // Handle Categories button press
-                        break;
-                      // Add other cases as needed
-                    }
-                  },
-                  items: <String>[
-                    'Categories',
-                    'Documentaries',
-                    'Comedies',
-                    'Action'
-                  ].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  icon: const Icon(Icons.arrow_drop_down),
-                  style: const TextStyle(color: Colors.white),
-                  underline: Container(),
-                  dropdownColor: AppColors
-                      .primary, // Example dropdown background color, adjust as needed
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color:
-                    Colors.black, // Example background color, adjust as needed
-                image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/images/live_video.jpg'), // Replace with live video asset
-                  fit: BoxFit.cover,
-                ),
-              ),
-              height: 400, // Adjust container height as needed
-              child: Stack(
-                children: [
-                  Positioned(
-                    bottom: 10,
-                    left: 10,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Handle Get Game button press
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors
-                            .primary, // Example background color with opacity
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      icon: const Icon(Icons.download_rounded),
-                      label: const Text('Get Game'),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 10,
-                    right: 10,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Handle My List button press
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors
-                            .primary, // Example background color with opacity
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      icon: const Icon(Icons.add),
-                      label: const Text('My List'),
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: Image.asset(
-                      'assets/images/left_image.png', // Replace with left image asset
-                      height: 50, // Adjust height as needed
-                      width: 50, // Adjust width as needed
-                    ),
-                  ),
-                  const Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Text(
-                      'Cozy Grove: Camp Spirit', // Replace with actual text
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24, // Adjust font size as needed
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: onPageChanged,
+        children: _pages,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: AppColors.black,
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          _pageController.jumpToPage(index);
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.videogame_asset),
+            label: 'Games',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_fire_department),
+            label: 'New & Hot',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.download),
+            label: 'Downloads',
+          ),
+        ],
       ),
     );
   }
 }
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'Home Page',
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+}
+
+
+
+
+
+

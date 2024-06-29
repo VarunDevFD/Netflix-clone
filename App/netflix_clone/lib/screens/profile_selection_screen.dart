@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/screens/home_screen.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
 import 'package:netflix_clone/untils/app_strings.dart';
+import 'package:netflix_clone/widgets/add_profile_container.dart';
+import 'package:netflix_clone/widgets/profile_container.dart';
 
 class ProfileSelectionScreen extends StatelessWidget {
   const ProfileSelectionScreen({Key? key}) : super(key: key);
@@ -28,9 +30,7 @@ class ProfileSelectionScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              // Handle edit button press
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -86,95 +86,6 @@ class ProfileSelectionScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class ProfileContainer extends StatelessWidget {
-  final String imagePath;
-  final String userName;
-  final VoidCallback onTap;
-
-  const ProfileContainer({
-    Key? key,
-    required this.imagePath,
-    required this.userName,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Hero(
-            tag: imagePath,
-            child: Container(
-              width: 125,
-              height: 125,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            userName,
-            style: const TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AddProfileContainer extends StatelessWidget {
-  final VoidCallback onTap;
-
-  const AddProfileContainer({
-    Key? key,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 125,
-            height: 125,
-            decoration: BoxDecoration(
-              color: AppColors.gray,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: Color.fromARGB(66, 153, 153, 153),
-                width: 2,
-              ),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.add,
-                color: AppColors.white,
-                size: 50,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            "Add Profile",
-            style: TextStyle(color: AppColors.white, fontSize: 16),
-          ),
-        ],
       ),
     );
   }
