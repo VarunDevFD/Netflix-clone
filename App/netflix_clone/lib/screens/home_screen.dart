@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/screens/downloads_page.dart';
 import 'package:netflix_clone/screens/games_page.dart';
+import 'package:netflix_clone/screens/home_page.dart';
 import 'package:netflix_clone/screens/new_and_hot_page.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
 import 'package:netflix_clone/widgets/custom_app_bar.dart';
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
-    HomePage(),
+    HomePageScreen(),
     GamesPage(),
     NewAndHotPage(),
     DownloadsPage(),
@@ -83,51 +84,57 @@ class _HomeScreenState extends State<HomeScreen> {
         onPageChanged: onPageChanged,
         children: _pages,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: AppColors.black,
-        currentIndex: _currentIndex,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          _pageController.jumpToPage(index);
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.videogame_asset),
-            label: 'Games',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.local_fire_department),
-            label: 'New & Hot',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.download),
-            label: 'Downloads',
-          ),
-        ],
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,  // Remove ripple effect
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: AppColors.black,
+          currentIndex: _currentIndex,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: true,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: _currentIndex == 0
+                  ? const Icon(Icons.home)
+                  : const Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: _currentIndex == 1
+                  ? const Icon(Icons.videogame_asset)
+                  : const Icon(Icons.videogame_asset_outlined),
+              label: 'Games',
+            ),
+            BottomNavigationBarItem(
+              icon: _currentIndex == 2
+                  ? const Icon(Icons.local_fire_department)
+                  : const Icon(Icons.local_fire_department_outlined),
+              label: 'New & Hot',
+            ),
+            BottomNavigationBarItem(
+              icon: _currentIndex == 3
+                  ? const Icon(Icons.download)
+                  : const Icon(Icons.download_outlined),
+              label: 'Downloads',
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Home Page',
-        style: TextStyle(color: Colors.white),
-      ),
-    );
-  }
-}
-
-
-
-
 
 
