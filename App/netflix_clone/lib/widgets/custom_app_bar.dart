@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         padding: const EdgeInsets.symmetric(
-          vertical: 10.0,
+          vertical: 5.0,
           horizontal: 0.0,
         ),
         color: AppColors.black
@@ -31,8 +31,8 @@ class CustomAppBar extends StatelessWidget {
               logoPath != null
                   ? Image.asset(
                       logoPath!,
-                      height: 60,
-                      width: 80,
+                      height: 70,
+                      width: 70,
                     )
                   : Padding(
                       padding: const EdgeInsets.only(left: 20),

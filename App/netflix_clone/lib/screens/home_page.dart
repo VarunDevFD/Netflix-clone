@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/now_playing_movie_model.dart';
 import 'package:netflix_clone/models/popular_movie_model.dart';
 import 'package:netflix_clone/models/top_rated_movie_model.dart';
+import 'package:netflix_clone/models/tv_series_model.dart';
 import 'package:netflix_clone/models/upcoming_movie_model.dart';
 import 'package:netflix_clone/services/api_service.dart';
+import 'package:netflix_clone/widgets/custom_carousel.dart';
 import 'package:netflix_clone/widgets/nowplaying_movie_widget.dart';
 import 'package:netflix_clone/widgets/popular_movie_widget.dart';
 import 'package:netflix_clone/widgets/top_rated_movie_widget.dart';
@@ -17,16 +19,19 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  late Future<TvSeriesModel> topRatedSeries;
   late Future<NowplayingMovieModel> nowPlayingFuture;
   late Future<PopularMovieModel> popularFuture;
   late Future<UpcomingMovieModel> upcomingFuture;
   late Future<TopRatedMovieModel> topRatedFuture;
+
   ApiService apiServices = ApiService();
 
   @override
   void initState() {
     super.initState();
 
+    topRatedSeries = apiServices.getTopRatedSeries();
     nowPlayingFuture = apiServices.getNowPlayingMovies();
     popularFuture = apiServices.getPopularMovies();
     upcomingFuture = apiServices.getUpcomingMovies();
@@ -38,6 +43,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          FutureBuilder(
+              future: topRatedSeries,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return CustomCarouselSlider(data: snapshot.data!);
+                } else {
+                  return const SizedBox.shrink();
+                }
+              }),
           SizedBox(
             height: 260,
             child: NowPlayingMovieCard(
