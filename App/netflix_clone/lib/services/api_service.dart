@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:netflix_clone/models/movie_recommendation_model.dart';
 import 'package:netflix_clone/models/now_playing_movie_model.dart';
 import 'package:netflix_clone/models/popular_movie_model.dart';
 import 'package:netflix_clone/models/search_model.dart';
@@ -83,6 +84,20 @@ class ApiService {
       return TopRatedMovieModel.fromJson(jsonDecode(response.body));
     }
     throw Exception("Failed to load top_rated movies");
+  }
+
+  Future<MovieRecommendationModel> getRecPopularMovies() async {
+    endPoint = "tv/popular";
+    final url = "$baseUrl$endPoint$key";
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      log("Success");
+
+      return MovieRecommendationModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception("Failed to load RecPopular movies");
   }
 
   Future<SearchModel> getSearchedMovies(String searchText) async {

@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/movie_recommendation_model.dart';
 import 'package:netflix_clone/models/search_model.dart';
 import 'package:netflix_clone/services/api_service.dart';
 import 'package:netflix_clone/untils/api_until.dart';
@@ -12,7 +14,7 @@ class SearchScreen extends StatefulWidget {
   final String selectedImage;
   final String userName;
 
-  const SearchScreen({
+  SearchScreen({
     super.key,
     required this.selectedImage,
     required this.userName,
@@ -25,6 +27,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
   ApiService apiServices = ApiService();
+  late Future<MovieRecommendationModel> popularMovies;
   Timer? _debounce;
   SearchModel? searchModel;
 
@@ -48,6 +51,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    popularMovies = apiServices.getRecPopularMovies();
   }
 
   @override
@@ -130,30 +134,114 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
               ),
             ),
-            searchModel == null
-                ? const SizedBox.shrink()
-                : GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: searchModel?.results.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 5,
-                      childAspectRatio: 1.2 / 2,
-                    ),
-                    itemBuilder: (context, index) {
+            searchController.text.isEmpty
+                ? FutureBuilder(
+                    future: popularMovies,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        log('Error fetching data: ${snapshot.error}');
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (!snapshot.hasData ||
+                          snapshot.data?.results == null ||
+                          snapshot.data!.results.isEmpty) {
+                        return const Center(child: Text('No data available'));
+                      }
+                      var data = snapshot.data!.results;
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "$imageUrl${searchModel!.results[index].backdropPath}",
-                            height: 180,
+                          const SizedBox(
+                            height: 30,
                           ),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 20.0, top: 10.0),
+                            child: Text(
+                              "Top Searches",
+                              style: TextStyle(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          ListView.builder(
+                              padding: const EdgeInsets.all(10),
+                              itemCount: data.length,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Container(
+                                    height: 120,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: Row(
+                                      children: [
+                                        Image.network(
+                                            "$imageUrl${data[index].posterPath}"),
+                                        SizedBox(width: 20),
+                                        Text(
+                                          data[index].name,
+                                          maxLines: 2,
+                                          style:
+                                              TextStyle(color: AppColors.text),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              })
                         ],
                       );
                     },
-                  ),
+                  )
+                : searchModel == null
+                    ? const SizedBox.shrink()
+                    : GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: searchModel?.results.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 3,
+                          crossAxisSpacing: 6,
+                          childAspectRatio: 1.2 / 2,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              searchModel!.results[index].backdropPath == null
+                                  ? Image.asset("assets/logo/logo.png",
+                                      height: 170)
+                                  : CachedNetworkImage(
+                                      imageUrl:
+                                          "$imageUrl${searchModel!.results[index].backdropPath}",
+                                      height: 170,
+                                    ),
+                              SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    searchModel!.results[index].originalTitle,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.text,
+                                    ),
+                                  ))
+                            ],
+                          );
+                        },
+                      ),
           ],
         ),
       ),
