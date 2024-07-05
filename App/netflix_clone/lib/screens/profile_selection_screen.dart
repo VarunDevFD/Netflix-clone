@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/screens/home_screen.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/untils/app_routes.dart';
 import 'package:netflix_clone/untils/app_strings.dart';
 import 'package:netflix_clone/widgets/add_profile_container.dart';
 import 'package:netflix_clone/widgets/profile_container.dart';
@@ -63,14 +64,12 @@ class ProfileSelectionScreen extends StatelessWidget {
                         imagePath: 'assets/images/profile_img${i + 1}.jpg',
                         userName: 'User ${i + 1}',
                         onTap: () {
-                          Navigator.pushReplacement(
+                          Navigator.pushReplacementNamed(
                             context,
-                            MaterialPageRoute(
-                              builder: (context) => HomeScreen(
-                                selectedImage:
-                                    'assets/images/profile_img${i + 1}.jpg',
-                                userName: 'User ${i + 1}',
-                              ),
+                            AppRoutes.homeSn,
+                            arguments: HomeScreen(
+                              selectedImage:'assets/images/profile_img${i + 1}.jpg',
+                              userName: 'User ${i + 1}', 
                             ),
                           );
                         },

@@ -71,9 +71,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size(screenSize.width, 50.0),
+        preferredSize: Size(screenSize.width, 60.0),
         child: CustomAppBar(
           selectedImage: widget.selectedImage,
+          userName: widget.userName,
           scrollOffset: _scrollOffset,
           logoPath: _currentIndex == 0 ? 'assets/logo/logo.png' : null,
           title: _currentIndex == 0 ? null : _appBarTitles[_currentIndex],
@@ -86,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,  // Remove ripple effect
+          splashColor: Colors.transparent, // Remove ripple effect
         ),
         child: BottomNavigationBar(
           backgroundColor: AppColors.black,
@@ -136,5 +137,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

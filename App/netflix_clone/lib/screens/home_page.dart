@@ -43,6 +43,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           FutureBuilder(
               future: topRatedSeries,
               builder: (context, snapshot) {

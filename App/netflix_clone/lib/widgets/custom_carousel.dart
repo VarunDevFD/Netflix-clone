@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/tv_series_model.dart';
 import 'package:netflix_clone/untils/api_until.dart';
+import 'package:netflix_clone/untils/app_colors.dart';
 
 class CustomCarouselSlider extends StatelessWidget {
   final TvSeriesModel data;
@@ -21,12 +22,20 @@ class CustomCarouselSlider extends StatelessWidget {
           return GestureDetector(
             child: Column(
               children: [
-                SizedBox(height: 5),
                 CachedNetworkImage(imageUrl: "$imageUrl$url"),
                 const SizedBox(
                   height: 20,
                 ),
-                Text(data.results[index].name),
+                Text(
+                  data.results[index].name,
+                  style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           );

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/screens/search_screen.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/untils/app_routes.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String selectedImage;
+  final String userName;
   final double scrollOffset;
   final String? logoPath;
   final String? title;
 
-  const CustomAppBar({
+  CustomAppBar({
     Key? key,
     required this.selectedImage,
+    required this.userName,
     required this.scrollOffset,
     this.logoPath,
     this.title,
@@ -51,7 +55,22 @@ class CustomAppBar extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     IconButton(
-                        onPressed: () {}, icon: const Icon(Icons.search)),
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.searchSn,
+                          arguments: SearchScreen(
+                            selectedImage: selectedImage,
+                            userName: userName,
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.search,
+                        color: AppColors.grey,
+                        size: 26,
+                      ),
+                    ),
                     Hero(
                       tag: selectedImage,
                       child: Container(
