@@ -119,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
           children: [
             SizedBox(
               width: double.infinity,
-              height: 70.0, // Adjust the height as needed
+              height: 70.0,
               child: CupertinoSearchTextField(
                 controller: searchController,
                 padding: const EdgeInsets.all(8.0),
@@ -200,7 +200,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                       child: Row(
                                         children: [
                                           Image.network(
-                                              "$imageUrl${data[index].posterPath}"),
+                                            "$imageUrl${data[index].posterPath}",
+                                            fit: BoxFit.fitHeight,
+                                          ),
                                           const SizedBox(width: 20),
                                           Text(
                                             data[index].title,
@@ -232,30 +234,51 @@ class _SearchScreenState extends State<SearchScreen> {
                           childAspectRatio: 1.2 / 2,
                         ),
                         itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              searchModel!.results[index].backdropPath == null
-                                  ? Image.asset("assets/logo/logo.png",
-                                      height: 170)
-                                  : CachedNetworkImage(
-                                      imageUrl:
-                                          "$imageUrl${searchModel!.results[index].backdropPath}",
-                                      height: 170,
+                          return searchModel!.results[index].backdropPath ==
+                                  null
+                              ? Column(
+                                  children: [
+                                    Image.asset("assets/logo/logo.png",
+                                        height: 170),
+                                    Text(
+                                      searchModel!.results[index].title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.text,
+                                      ),
                                     ),
-                              SizedBox(
-                                width: 100,
-                                child: Text(
-                                  searchModel!.results[index].originalTitle,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: AppColors.text,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.detailSn,
+                                          arguments: MovieDetailedSn(
+                                            movieId:
+                                                searchModel!.results[index].id,
+                                          ),
+                                        );
+                                      },
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '$imageUrl${searchModel?.results[index].backdropPath}',
+                                        height: 170,
+                                      ),
+                                    ),
+                                    Text(
+                                        searchModel!.results[index].title,
+                                        maxLines: 2,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                  ],
+                                );
                         },
                       ),
           ],
