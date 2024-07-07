@@ -18,14 +18,9 @@ class PopularMovieCard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          log('Error fetching data: ${snapshot.error}');
+        } else if (snapshot.hasError || snapshot.data == null) {
           return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData ||
-            snapshot.data?.results == null ||
-            snapshot.data!.results.isEmpty) {
-          return const Center(child: Text('No data available'));
-        }
+        } 
         var data = snapshot.data!.results;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

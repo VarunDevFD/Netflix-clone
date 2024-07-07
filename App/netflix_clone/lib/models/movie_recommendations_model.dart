@@ -1,24 +1,25 @@
 import 'dart:convert';
 
-class SearchModel {
+class MovieRecommendationsModel {
   int page;
   List<Result> results;
   int totalPages;
   int totalResults;
 
-  SearchModel({
+  MovieRecommendationsModel({
     required this.page,
     required this.results,
     required this.totalPages,
     required this.totalResults,
   });
 
-  factory SearchModel.fromRawJson(String str) =>
-      SearchModel.fromJson(json.decode(str));
+  factory MovieRecommendationsModel.fromRawJson(String str) =>
+      MovieRecommendationsModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory SearchModel.fromJson(Map<String, dynamic> json) => SearchModel(
+  factory MovieRecommendationsModel.fromJson(Map<String, dynamic> json) =>
+      MovieRecommendationsModel(
         page: json["page"],
         results:
             List<Result>.from(json["results"].map((x) => Result.fromJson(x))),
@@ -36,14 +37,14 @@ class SearchModel {
 
 class Result {
   bool adult;
-  String? backdropPath;
+  String backdropPath;
   List<int> genreIds;
   int id;
   String originalLanguage;
   String originalTitle;
   String overview;
   double popularity;
-  String? posterPath;
+  String posterPath;
   DateTime releaseDate;
   String title;
   bool video;

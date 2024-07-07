@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:netflix_clone/models/movie_details_model.dart';
 import 'package:netflix_clone/models/movie_recommendation_model.dart';
 import 'package:netflix_clone/models/now_playing_movie_model.dart';
 import 'package:netflix_clone/models/popular_movie_model.dart';
@@ -44,7 +45,7 @@ class ApiService {
     throw Exception("Failed to load now playing movies");
   }
 
-  Future<PopularMovieModel> getPopularMovies() async {
+  Future<PopularMovieModel> getPopularMovie() async {
     endPoint = "movie/popular";
     final url = "$baseUrl$endPoint$key";
 
@@ -86,20 +87,6 @@ class ApiService {
     throw Exception("Failed to load top_rated movies");
   }
 
-  Future<MovieRecommendationModel> getRecPopularMovies() async {
-    endPoint = "tv/popular";
-    final url = "$baseUrl$endPoint$key";
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      log("Success");
-
-      return MovieRecommendationModel.fromJson(jsonDecode(response.body));
-    }
-    throw Exception("Failed to load RecPopular movies");
-  }
-
   Future<SearchModel> getSearchedMovies(String searchText) async {
     endPoint = "search/movie?query=$searchText";
     final url = "$baseUrl$endPoint";
@@ -116,5 +103,47 @@ class ApiService {
       return SearchModel.fromJson(jsonDecode(response.body));
     }
     throw Exception("Failed to load searched movie");
+  }
+
+  Future<MovieDetailModel> getMovieDetails(int movieId) async {
+    endPoint = "movie/$movieId";
+    final url = "$baseUrl$endPoint$key";
+
+    log("Search url is $url");
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      log("Success");
+
+      return MovieDetailModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception("Failed to load  movie details");
+  }
+
+  Future<MovieRecommendationsModel> getMoviesRecommendation(int movieId) async {
+    endPoint = "movie/$movieId/recommendations";
+    final url = "$baseUrl$endPoint$key";
+
+    log("Recommandation Movie url $url");
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      log("Success");
+
+      return MovieRecommendationsModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception("Failed to load  movie details");
+  }
+
+  Future<MovieRecommendationsModel> getPopularMovies() async {
+    endPoint = 'movie/popular';
+    final url = '$baseUrl$endPoint$key';
+
+    final response = await http.get(Uri.parse(url), headers: {});
+    if (response.statusCode == 200) {
+      log('success');
+      return MovieRecommendationsModel.fromJson(jsonDecode(response.body));
+    }
+    throw Exception('failed to load now playing movies');
   }
 }

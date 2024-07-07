@@ -6,15 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/movie_recommendation_model.dart';
 import 'package:netflix_clone/models/search_model.dart';
+import 'package:netflix_clone/screens/movie_detailed_screen.dart';
 import 'package:netflix_clone/services/api_service.dart';
 import 'package:netflix_clone/untils/api_until.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/untils/app_routes.dart';
 
 class SearchScreen extends StatefulWidget {
   final String selectedImage;
   final String userName;
 
-  SearchScreen({
+  const SearchScreen({
     super.key,
     required this.selectedImage,
     required this.userName,
@@ -27,7 +29,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
   ApiService apiServices = ApiService();
-  late Future<MovieRecommendationModel> popularMovies;
+  late Future<MovieRecommendationsModel> popularMovies;
   Timer? _debounce;
   SearchModel? searchModel;
 
@@ -50,8 +52,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   void initState() {
+    popularMovies = apiServices.getPopularMovies();
     super.initState();
-    popularMovies = apiServices.getRecPopularMovies();
   }
 
   @override
@@ -77,7 +79,9 @@ class _SearchScreenState extends State<SearchScreen> {
               child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 icon: const Icon(
                   Icons.arrow_back,
                   color: AppColors.white,
@@ -178,23 +182,34 @@ class _SearchScreenState extends State<SearchScreen> {
                               itemBuilder: (context, index) {
                                 return Padding(
                                   padding: const EdgeInsets.all(10.0),
-                                  child: Container(
-                                    height: 120,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: Row(
-                                      children: [
-                                        Image.network(
-                                            "$imageUrl${data[index].posterPath}"),
-                                        SizedBox(width: 20),
-                                        Text(
-                                          data[index].name,
-                                          maxLines: 2,
-                                          style:
-                                              TextStyle(color: AppColors.text),
-                                        )
-                                      ],
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.detailSn,
+                                        arguments: MovieDetailedSn(
+                                          movieId: data[index].id,
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Row(
+                                        children: [
+                                          Image.network(
+                                              "$imageUrl${data[index].posterPath}"),
+                                          const SizedBox(width: 20),
+                                          Text(
+                                            data[index].title,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                                color: AppColors.text),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
@@ -228,16 +243,17 @@ class _SearchScreenState extends State<SearchScreen> {
                                       height: 170,
                                     ),
                               SizedBox(
-                                  width: 100,
-                                  child: Text(
-                                    searchModel!.results[index].originalTitle,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.text,
-                                    ),
-                                  ))
+                                width: 100,
+                                child: Text(
+                                  searchModel!.results[index].originalTitle,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                         },

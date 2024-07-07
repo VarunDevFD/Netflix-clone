@@ -33,7 +33,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     topRatedSeries = apiServices.getTopRatedSeries();
     nowPlayingFuture = apiServices.getNowPlayingMovies();
-    popularFuture = apiServices.getPopularMovies();
+    popularFuture = apiServices.getPopularMovie();
     upcomingFuture = apiServices.getUpcomingMovies();
     topRatedFuture = apiServices.getTopRatedMovies();
   }
