@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/now_playing_movie_model.dart';
+import 'package:netflix_clone/screens/movie_detailed_screen.dart';
 import 'package:netflix_clone/untils/api_until.dart';
 import 'package:netflix_clone/untils/app_colors.dart';
+import 'package:netflix_clone/untils/app_routes.dart';
 
 class NowPlayingMovieCard extends StatelessWidget {
   final Future<NowplayingMovieModel> future;
@@ -43,14 +45,13 @@ class NowPlayingMovieCard extends StatelessWidget {
                           padding: const EdgeInsets.all(10.0),
                           child: InkWell(
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => MovieDetailScreen(
-                              //       movieId: data[index].id,
-                              //     ),
-                              //   ),
-                              // );
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.detailSn,
+                                arguments: MovieDetailedSn(
+                                  movieId: data[index].id,
+                                ),
+                              );
                             },
                             child: Container(
                               decoration: BoxDecoration(

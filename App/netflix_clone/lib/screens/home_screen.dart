@@ -28,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController _pageController = PageController();
 
   final List<Widget> _pages = [
-    HomePageScreen(),
-    GamesPage(),
-    NewAndHotPage(),
-    DownloadsPage(),
+    const HomePageScreen(),
+    const GamesPage(),
+    const NewandHotPage(), // Updated here
+    const DownloadsPage(),
   ];
 
   final List<String> _appBarTitles = [
@@ -69,69 +69,95 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size(screenSize.width, 60.0),
-        child: CustomAppBar(
-          selectedImage: widget.selectedImage,
-          userName: widget.userName,
-          scrollOffset: _scrollOffset,
-          logoPath: _currentIndex == 0 ? 'assets/logo/logo.png' : null,
-          title: _currentIndex == 0 ? null : _appBarTitles[_currentIndex],
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize:
+              Size(screenSize.width, _currentIndex == 2 ? 125.0 : 80.0),
+          child: CustomAppBar(
+            selectedImage: widget.selectedImage,
+            userName: widget.userName,
+            scrollOffset: _scrollOffset,
+            logoPath: _currentIndex == 0 ? 'assets/logo/logo.png' : null,
+            title: _currentIndex == 0 ? null : _appBarTitles[_currentIndex],
+            bottom: _currentIndex == 2
+                ? TabBar(
+                    dividerColor: Colors.black,
+                    isScrollable: false,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    labelColor: Colors.black,
+                    labelStyle: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
+                    unselectedLabelColor: Colors.white,
+                    tabs: const [
+                      Tab(
+                        text: '  🍿 Coming Soon  ',
+                      ),
+                      Tab(
+                        text: "  🔥 Everyone's watching  ",
+                      ),
+                    ],
+                  )
+                : null,
+          ),
         ),
-      ),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: onPageChanged,
-        children: _pages,
-      ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent, // Remove ripple effect
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: onPageChanged,
+          children: _pages,
         ),
-        child: BottomNavigationBar(
-          backgroundColor: AppColors.black,
-          currentIndex: _currentIndex,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
-          type: BottomNavigationBarType.fixed,
-          showUnselectedLabels: true,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: _currentIndex == 0
-                  ? const Icon(Icons.home)
-                  : const Icon(Icons.home_outlined),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 1
-                  ? const Icon(Icons.videogame_asset)
-                  : const Icon(Icons.videogame_asset_outlined),
-              label: 'Games',
-            ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 2
-                  ? const Icon(Icons.local_fire_department)
-                  : const Icon(Icons.local_fire_department_outlined),
-              label: 'New & Hot',
-            ),
-            BottomNavigationBarItem(
-              icon: _currentIndex == 3
-                  ? const Icon(Icons.download)
-                  : const Icon(Icons.download_outlined),
-              label: 'Downloads',
-            ),
-          ],
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent, // Remove ripple effect
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: AppColors.black,
+            currentIndex: _currentIndex,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+            showUnselectedLabels: true,
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: _currentIndex == 0
+                    ? const Icon(Icons.home)
+                    : const Icon(Icons.home_outlined),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: _currentIndex == 1
+                    ? const Icon(Icons.videogame_asset)
+                    : const Icon(Icons.videogame_asset_outlined),
+                label: 'Games',
+              ),
+              BottomNavigationBarItem(
+                icon: _currentIndex == 2
+                    ? const Icon(Icons.local_fire_department)
+                    : const Icon(Icons.local_fire_department_outlined),
+                label: 'New & Hot',
+              ),
+              BottomNavigationBarItem(
+                icon: _currentIndex == 3
+                    ? const Icon(Icons.download)
+                    : const Icon(Icons.download_outlined),
+                label: 'Downloads',
+              ),
+            ],
+          ),
         ),
       ),
     );
